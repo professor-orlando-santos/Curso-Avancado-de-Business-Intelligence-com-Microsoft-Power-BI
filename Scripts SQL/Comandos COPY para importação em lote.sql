@@ -26,6 +26,15 @@ psql -U postgres -d bd_estados_brasil -c ^"\COPY estados_populacao ^
  WITH DELIMITER ',' ^
  ENCODING 'UTF-8' ^
  CSV HEADER;
+ 
+
+psql -U postgres -d bd_estados_brasil -c ^"\COPY estados_servidores_publicos ^
+ (uf_codigo_ibge, ano, esfera, poder,quantidade_de_vinculos) ^
+ FROM 'C:/proforlandosantos/Curso-de-Power-BI-Avançado/Dados/Servidores Públicos nos Estados.csv' ^
+ WITH DELIMITER ',' ^
+ ENCODING 'UTF-8' ^
+ CSV HEADER;
+ 
 
 psql -U postgres -d bd_estados_brasil -c ^"\COPY inscricoes_evg ^
  (ano, tematica_id, tematica, cod_curso, nome_curso, ^

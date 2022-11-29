@@ -62,6 +62,25 @@ uf_nome  varchar(50)
 alter table estados_bioma_amazonia add constraint fk_estado_biomas_amazonia
    FOREIGN KEY (uf_codigo_ibge) REFERENCES estados(uf_codigo_ibge);
 
+DROP TABLE IF EXISTS estados_servidores_publicos CASCADE;
+
+
+create table estados_servidores_publicos  (
+id serial primary key,
+uf_codigo_ibge integer not null,
+ano integer not null,
+esfera varchar(50) not NULL,
+poder varchar(50) not null,
+quantidade_de_vinculos integer);
+
+
+
+alter table estados_servidores_publicos add constraint fk_estado_vinculos
+   FOREIGN KEY (uf_codigo_ibge) REFERENCES estados(uf_codigo_ibge);
+
+
+
+
 DROP TABLE IF EXISTS inscricoes_evg CASCADE;
 
 create table inscricoes_evg(
