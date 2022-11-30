@@ -1,3 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS evg;
+
 --cria a tabela dimensional temática
 
 CREATE TABLE IF NOT EXISTS evg.dm_tematica
@@ -9,6 +11,22 @@ CREATE TABLE IF NOT EXISTS evg.dm_tematica
 
 
 select * from evg.dm_tematica order by tematica_id;
+
+insert into evg.dm_tematica(tematica_id, tematica)
+select distinct origem.tematica_id, origem.tematica
+from public.inscricoes_evg origem
+left join  evg.dm_tematica destino 
+	on destino.tematica_id = origem.tematica_id
+where destino.tematica_id is null
+order by tematica_id;
+
+update evg.dm_tematica destino
+set tematica = origem.tematica
+from (
+		select distinct tematica_id, tematica
+		from public.inscricoes_evg
+	) as origem
+where origem.tematica_id = destino.tematica_id;
 
 
 insert into evg.dm_tematica(tematica_id, tematica)
@@ -191,13 +209,35 @@ on conflict(faixa_idade_id) DO
 
 select * from evg.dm_faixa_idade order by faixa_idade_id;
 
+
+--Inserir a UF "Não informada nos estados e Regiões
+/*
+select * from regioes  order by regiao_codigo_ibge;
+
+insert into regioes(regiao_codigo_ibge, regiao_sigla, regiao_nome)
+values (-1, 'NI', 'Não informada');
+
+select * from regioes order by regiao_codigo_ibge;
+
+
+
+select * from estados, order by uf_codigo_ibge;
+
+insert into estados(uf_codigo_ibge, uf_sigla, uf_nome, regiao_codigo_ibge)
+values (-1, 'NI', 'Não informada', -1);
+
+select * from estados order by uf_codigo_ibge;
+
+*/
+
+
 CREATE TABLE IF NOT EXISTS evg.ft_inscricoes
 (
     id serial not null,
     ano integer NOT NULL,
     tematica_id integer NOT NULL,
     cod_curso integer NOT NULL,
-	pessoa_uf_sigla character varying(2) COLLATE pg_catalog."default" NOT NULL,
+	uf_codigo_ibge integer NOT NULL,
     esfera_id integer NOT NULL,
 	poder_id integer NOT NULL,
 	sexo_id integer NOT NULL,
@@ -212,16 +252,17 @@ select * from evg.ft_inscricoes limit 100;
 
 truncate table  evg.ft_inscricoes;
 
-insert into evg.ft_inscricoes (ano, tematica_id, cod_curso, pessoa_uf_sigla,
+insert into evg.ft_inscricoes (ano, tematica_id, cod_curso, uf_codigo_ibge,
 	esfera_id, poder_id, sexo_id, situacao_matricula_id, situacao_turma_id, 
 	faixa_idade_id ,quantidade_de_inscricoes)
-select ano, tematica_id, cod_curso, pessoa_uf_sigla,
-	esfera_id, poder_id, sexo_id, situacao_matricula_id, situacao_turma_id, 
-	faixa_idade_id ,sum(inscricoes) as quantidade_de_inscricoes
-from public.inscricoes_evg
-group by ano, tematica_id, cod_curso, pessoa_uf_sigla,
-	esfera_id, poder_id, sexo_id, situacao_matricula_id, situacao_turma_id, 
-	faixa_idade_id
+select i.ano, i.tematica_id, i.cod_curso, e.uf_codigo_ibge,
+	i.esfera_id, i.poder_id, i.sexo_id, i.situacao_matricula_id, i.situacao_turma_id, 
+	i.faixa_idade_id ,sum(i.inscricoes) as quantidade_de_inscricoes
+from public.inscricoes_evg i
+join estados e on e.uf_sigla = i.pessoa_uf_sigla
+group by i.ano, i.tematica_id, i.cod_curso, e.uf_codigo_ibge,
+	i.esfera_id, i.poder_id, i.sexo_id, i.situacao_matricula_id, i.situacao_turma_id, 
+	i.faixa_idade_id 
 order by ano;
 	
 select * from evg.ft_inscricoes limit 100; 
