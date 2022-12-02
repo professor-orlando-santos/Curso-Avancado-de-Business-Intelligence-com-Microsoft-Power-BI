@@ -1,3 +1,5 @@
+cd C:\Program Files\PostgreSQL\10\bin
+biavancado
 
 psql -U postgres -d bd_estados_brasil -c ^"\COPY regioes ^
  (regiao_codigo_ibge, regiao_nome, regiao_sigla) ^

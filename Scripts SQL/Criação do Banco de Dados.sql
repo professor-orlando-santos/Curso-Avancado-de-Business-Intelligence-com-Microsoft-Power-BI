@@ -51,6 +51,8 @@ populacao_estimada integer);
 alter table estados_populacao add constraint fk_estado_populacao
    FOREIGN KEY (uf_codigo_ibge) REFERENCES estados(uf_codigo_ibge);
 
+DROP TABLE IF EXISTS estados_bioma_amazonia CASCADE; 
+
 
 create table estados_bioma_amazonia  (
 uf_codigo_ibge integer primary key,
