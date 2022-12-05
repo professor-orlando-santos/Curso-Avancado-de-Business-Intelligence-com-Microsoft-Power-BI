@@ -37,6 +37,19 @@ psql -U postgres -d bd_estados_brasil -c ^"\COPY estados_servidores_publicos ^
  ENCODING 'UTF-8' ^
  CSV HEADER;
  
+ 
+
+
+ psql -U postgres -d bd_estados_brasil -c ^"\COPY estados_bioma_amazonia ^
+ (uf_codigo_ibge, uf_sigla, uf_nome) ^
+ from  'C:/proforlandosantos/Curso-de-Power-BI-Avançado/Dados/Estados com bioma da amazônia.csv' ^
+ WITH DELIMITER ',' ^
+ ENCODING 'UTF-8' ^
+ CSV HEADER;
+ 
+  
+ 
+ 
 
 psql -U postgres -d bd_estados_brasil -c ^"\COPY inscricoes_evg ^
  (ano, tematica_id, tematica, cod_curso, nome_curso, ^
