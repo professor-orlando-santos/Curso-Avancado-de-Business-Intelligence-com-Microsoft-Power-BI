@@ -6,7 +6,7 @@ psql -U postgres -d bd_estados_brasil -c ^"\COPY regioes ^
  FROM 'C:/proforlandosantos/Curso-de-Power-BI-Avançado/Dados/Regioes.csv' ^
  WITH DELIMITER ',' ^
  ENCODING 'UTF-8' ^
- CSV HEADER;
+ CSV HEADER;"
 
 psql -U postgres -d bd_estados_brasil -c ^"\COPY estados ^
  (uf_codigo_ibge, uf_nome, uf_sigla, regiao_codigo_ibge) ^
@@ -61,3 +61,16 @@ psql -U postgres -d bd_estados_brasil -c ^"\COPY inscricoes_evg ^
  WITH DELIMITER ';' ^
  ENCODING 'UTF-8' ^
  CSV HEADER;" 
+ 
+ --Podemos também exportar dados do banco com essa funcionalidade
+ psql -U postgres -d bd_estados_brasil -c ^"\COPY inscricoes_evg ^
+ (ano, tematica_id, tematica, cod_curso, nome_curso, ^
+ pessoa_uf_sigla, esfera_id, esfera, poder_id, ^
+ poder, sexo_id, sexo, situacao_matricula_id, ^
+ situacao_matricula, situacao_turma_id, ^
+ situacao_turma, faixa_idade_id, faixa_idade, inscricoes) ^
+ to 'C:/proforlandosantos/Curso-de-Power-BI-Avançado/Dados/EVG-DadosResumidos-Exportado.csv' ^
+ WITH DELIMITER ';' ^
+ ENCODING 'UTF-8' ^
+ CSV HEADER;" 
+ 
