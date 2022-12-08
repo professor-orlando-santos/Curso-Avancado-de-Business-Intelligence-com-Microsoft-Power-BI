@@ -19,7 +19,7 @@ from (
 		select table_schema as esquema
 		, table_name as tabela
 		, column_name  as coluna
-		, column_name || 'as' || column_name  as coluna_com_alias
+		, column_name || ' as ' || column_name  as coluna_com_alias
 		,ordinal_position as posicao
 		from information_schema.columns 
 		where table_schema = 'evg'
